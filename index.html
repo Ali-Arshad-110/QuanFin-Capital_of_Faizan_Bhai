@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+<title>QuanFin Capital</title>
+<style>
+  :root {
+    --qfc-bg: rgba(255,255,255,0.65);
+    --qfc-fg: #0b1324;
+    --qfc-muted: #5a6073;
+    --qfc-accent: #1d4ed8;
+    --qfc-border: rgba(15, 23, 42, 0.08);
+    --qfc-shadow: 0 10px 30px rgba(2, 6, 23, 0.08);
+  }
+  .qfc-dark {
+    --qfc-bg: rgba(15,23,42,0.55);
+    --qfc-fg: #e6e8ee;
+    --qfc-muted: #aab0c0;
+    --qfc-accent: #60a5fa;
+    --qfc-border: rgba(255,255,255,0.12);
+    --qfc-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    background: #0b1020;
+    color: var(--qfc-fg);
+  }
+
+  /* ===== Header / Shell ===== */
+  body { margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"; color: var(--qfc-fg); background: #f6f8fb; }
+  .qfc-dark body { background: #0b1020; }
+  .qfc-header {
+    position: sticky; top: 0; z-index: 1000;
+    backdrop-filter: saturate(120%) blur(10px);
+    background: var(--qfc-bg);
+    border-bottom: 1px solid var(--qfc-border);
+  }
+  .qfc-header--elev {
+    box-shadow: var(--qfc-shadow);
+  }
+  .qfc-container {
+    max-width: 1200px; margin: 0 auto; padding: 12px 18px; display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center;
+  }
+
+  /* ===== Brand ===== */
+  .qfc-brand { display: inline-flex; align-items: center; gap: 5px; text-decoration: none; }
+  .qfc-logo-img { max-height: 50px; height: auto; width: auto; display: block; object-fit: contain; }
+  .qfc-brand__name { font-weight: 700; letter-spacing: .2px; color: var(--qfc-fg); font-size: 1.05rem; }
+  .qfc-brand__sub { display: block; font: size 5px;; color: blue; margin-top: -2px;  }
+
+  /* ===== Desktop Nav ===== */
+  .qfc-nav { display: none; align-items: center; gap: 8px; }
+  .qfc-nav__list { display: inline-flex; gap: 4px; list-style: none; margin: 0; padding: 0; }
+  .qfc-link {
+    position: relative; display: inline-flex; align-items: center; gap: 6px;
+    padding: 10px 12px; border-radius: 12px; text-decoration: none;
+    color: var(--qfc-fg); font-weight: 500;
+  }
+  .qfc-link:hover, .qfc-link:focus { background: rgba(100,116,139,.12); outline: none; }
+  .qfc-link[aria-current="page"]::after {
+    content: ""; position: absolute; left: 12px; right: 12px; bottom: 6px; height: 2px; background: var(--qfc-accent); border-radius: 2px;
+  }
+
+  /* Dropdown */
+  .qfc-dropdown { position: relative; }
+  .qfc-dropbtn { cursor: pointer; }
+  .qfc-menu {
+    position: absolute; top: calc(100% + 8px); left: 0; min-width: 230px;
+    background: var(--qfc-bg); border: 1px solid var(--qfc-border); border-radius: 14px;
+    box-shadow: var(--qfc-shadow); padding: 6px; display: none;
+  }
+  .qfc-menu[data-open="true"] { display: block; }
+  .qfc-menu a { display: flex; justify-content: space-between; gap: 8px; padding: 10px 12px; border-radius: 10px; text-decoration: none; color: var(--qfc-fg); }
+  .qfc-menu a:hover, .qfc-menu a:focus { background: rgba(100,116,139,.12); outline: none; }
+  .qfc-kbd { font: 600 10px/1 ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; color: var(--qfc-muted); border: 1px solid var(--qfc-border); padding: 2px 6px; border-radius: 6px; }
+
+  /* ===== Right Controls ===== */
+  .qfc-cta { display: none; align-items: center; gap: 10px; }
+  .qfc-btn {
+    background: var(--qfc-fg); color: white; padding: 10px 14px; border-radius: 12px; text-decoration: none; font-weight: 600;
+  }
+  .qfc-btn:hover { filter: brightness(0.95); }
+  .qfc-toggle {
+    display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--qfc-border);
+    padding: 8px 10px; border-radius: 12px; cursor: pointer; user-select: none;
+  }
+
+  /* ===== Mobile ===== */
+  .qfc-burger {
+    display: inline-flex; flex-direction: column; gap: 4px; width: 42px; height: 38px; align-items: center; justify-content: center;
+    border: 1px solid var(--qfc-border); border-radius: 12px; background: transparent; cursor: pointer;
+  }
+  .qfc-burger span { width: 18px; height: 2px; background: var(--qfc-fg); border-radius: 2px; transition: transform .2s ease, opacity .2s ease; }
+  .qfc-burger[aria-expanded="true"] span:nth-child(1){ transform: translateY(6px) rotate(45deg);}
+  .qfc-burger[aria-expanded="true"] span:nth-child(2){ opacity: 0;}
+  .qfc-burger[aria-expanded="true"] span:nth-child(3){ transform: translateY(-6px) rotate(-45deg);}
+
+  .qfc-mobile {
+    display: none; border-top: 1px solid var(--qfc-border); background: var(--qfc-bg);
+  }
+  .qfc-mobile[hidden] { display: none !important; }
+  .qfc-mobile__list { list-style: none; margin: 0; padding: 8px; display: grid; gap: 6px; }
+  .qfc-mobile__link {
+    display: flex; justify-content: space-between; align-items: center; padding: 12px 10px; border-radius: 12px; text-decoration: none; color: var(--qfc-fg);
+  }
+  .qfc-mobile__link:hover { background: rgba(100,116,139,.12); }
+
+  /* ===== Layout breakpoints ===== */
+  @media (min-width: 900px) {
+    .qfc-nav { display: inline-flex; }
+    .qfc-cta { display: inline-flex; }
+    .qfc-burger { display: none; }
+    .qfc-mobile { display: none !important; }
+    .qfc-container { grid-template-columns: auto 1fr auto; }
+  }
+
+  /* ===== Focus style ===== */
+  :where(a,button,.qfc-toggle):focus-visible {
+    outline: 2px solid var(--qfc-accent);
+    outline-offset: 2px;
+    border-radius: 12px;
+  }
+</style>
+</head>
+<body>
+
+<header class="qfc-header" id="qfcHeader">
+  <div class="qfc-container">
+    <!-- Brand -->
+    <a class="qfc-brand" href="#" aria-label="QuanFin Capital — Home">
+      <img src="logo_-_Copy-removebg-preview.png" alt="QuanFin Capital Logo" class="qfc-logo-img" />
+      
+    </a>
+
+    <!-- Desktop Nav -->
+    <nav class="qfc-nav" aria-label="Primary">
+      <ul class="qfc-nav__list">
+        <li><a class="qfc-link" href="#home" aria-current="page">Home</a></li>
+        <li class="qfc-dropdown">
+          <button class="qfc-link qfc-dropbtn" id="marketsBtn" aria-haspopup="true" aria-expanded="false" aria-controls="marketsMenu">
+            Markets
+            <svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 10l5 5 5-5z"/></svg>
+          </button>
+          <div class="qfc-menu" id="marketsMenu" role="menu" aria-labelledby="marketsBtn" data-open="false">
+            <a href="#equities" role="menuitem">Equities <span class="qfc-kbd">EQ</span></a>
+            <a href="#futures" role="menuitem">Futures <span class="qfc-kbd">FU</span></a>
+            <a href="#fx" role="menuitem">FX <span class="qfc-kbd">FX</span></a>
+            <a href="#crypto" role="menuitem">Crypto <span class="qfc-kbd">CR</span></a>
+          </div>
+        </li>
+        <li><a class="qfc-link" href="#programs">Programs</a></li>
+        <li><a class="qfc-link" href="#careers">Careers</a></li>
+        <li><a class="qfc-link" href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <!-- Actions -->
+    <div class="qfc-cta">
+      <button class="qfc-toggle" id="themeToggle" aria-pressed="false" aria-label="Toggle dark mode">
+        <span id="themeIcon">🌙</span> <span class="qfc-toggle__txt">Theme</span>
+      </button>
+      <a class="qfc-btn" href="#apply">Apply</a>
+    </div>
+
+    <!-- Mobile burger -->
+    <button class="qfc-burger" id="qfcBurger" aria-controls="qfcMobile" aria-expanded="false" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <!-- Mobile panel -->
+  <nav class="qfc-mobile" id="qfcMobile" aria-label="Mobile">
+    <ul class="qfc-mobile__list">
+      <li><a class="qfc-mobile__link" href="#home">Home</a></li>
+      <li><details>
+        <summary class="qfc-mobile__link">Markets</summary>
+        <div style="padding:6px 10px; display:grid; gap:6px;">
+          <a class="qfc-mobile__link" href="#equities">Equities</a>
+          <a class="qfc-mobile__link" href="#futures">Futures</a>
+          <a class="qfc-mobile__link" href="#fx">FX</a>
+          <a class="qfc-mobile__link" href="#crypto">Crypto</a>
+        </div>
+      </details></li>
+      <li><a class="qfc-mobile__link" href="#programs">Programs</a></li>
+      <li><a class="qfc-mobile__link" href="#careers">Careers</a></li>
+      <li><a class="qfc-mobile__link" href="#contact">Contact</a></li>
+      <li style="display:flex; gap:10px; padding:6px 2px;">
+        <button class="qfc-toggle" id="themeToggleM" aria-pressed="false">🌙 Theme</button>
+        <a class="qfc-btn" href="#apply" style="flex:1; text-align:center;">Apply</a>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+<section class="hero">
+    <div class="hero-content">
+      <h1>Technology-Driven Quantitative Trading</h1>
+      <p>QuanFin Capital leverages advanced systems, AI, and data analytics to empower traders with precision and efficiency.</p>
+    </div>
+  </section>
+
+  <!-- Who We Are -->
+  <section>
+    <h2>Who We Are</h2>
+    <p>QuanFin Capital is a proprietary trading firm committed to building cutting-edge strategies and leveraging quantitative research. Our team thrives at the intersection of finance and technology.</p>
+    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475" alt="Team working">
+  </section>
+
+  <!-- What We Do -->
+  <section>
+    <h2>What We Do</h2>
+    <p>We design, test, and deploy trading models that adapt to dynamic markets. Our approach integrates statistics, machine learning, and risk management to deliver consistent performance.</p>
+    <img src="https://plus.unsplash.com/premium_photo-1756763706987-f92c08077b5d?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Data systems">
+  </section>
+
+  <!-- How We Reach You -->
+  <section>
+    <h2>How to Reach Us</h2>
+    <p>We believe in transparency and accessibility. Whether you’re a budding trader or an experienced professional, reach out to us to explore opportunities in quant trading.</p>
+    <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d" alt="Communication">
+  </section>
+
+  <!-- How We Do -->
+  <section>
+    <h2>How We Do</h2>
+    <p>Through rigorous research, real-time monitoring, and automation, QuanFin Capital delivers a competitive edge in trading. We combine strategy with execution to empower traders.</p>
+    <img src="https://images.unsplash.com/photo-1556740749-887f6717d7e4" alt="Technology systems">
+  </section>
+  <!-- footer-->
+   <!-- ===== FOOTER START ===== -->
+<footer class="qfc-footer">
+  <div class="qfc-footer-container">
+    
+    <!-- Company Info -->
+    <div class="qfc-footer-col">
+      <img src="logo_-_Copy-removebg-preview.png" alt="QuanFin Capital Logo" class="qfc-footer-logo">
+      <p class="qfc-footer-about">
+        QuanFin Capital is a proprietary trading firm leveraging technology, 
+        data, and advanced systems to redefine the future of quantitative trading.
+      </p>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="qfc-footer-col">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Trading Technology</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+
+    <!-- Contact Info -->
+    <div class="qfc-footer-col">
+      <h3>Contact Us</h3>
+      <ul>
+        <li>📍 1st Floor, Dohra Road, Bareilly, India</li>
+        <li><img src="email_img.png" width="20px">quanfincapital@gmail.com</li>
+        <li>📞 +91 9520597569</li>
+      </ul>
+    </div>
+
+    <!-- Newsletter -->
+    <div class="qfc-footer-col">
+      <h3>Stay Updated</h3>
+      <p>Subscribe to our newsletter for the latest market insights.</p>
+      <form class="qfc-footer-form">
+        <input type="email" placeholder="Enter your email" required>
+        <button type="submit">Subscribe</button>
+      </form>
+      <div class="qfc-footer-socials">
+        <a href="https://www.instagram.com/quanfincapital?igsh=MW4xbW8zcjIxdnBjZQ==" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram"></a>
+        <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733635.png" alt="Twitter"></a>
+        <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111468.png" alt="LinkedIn"></a>
+        
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="qfc-footer-bottom">
+    <p>© 2025 QuanFin Capital. All rights reserved.</p>
+    <ul class="qfc-footer-legal">
+      <li><a href="#">Privacy Policy</a></li>
+      <li><a href="#">Terms of Use</a></li>
+      <li><a href="#">Disclaimer</a></li>
+    </ul>
+  </div>
+</footer>
+<!-- ===== FOOTER END ===== -->
+
+<script>
+  // ===== Persisted Theme =====
+  const ROOT = document.documentElement;
+  const applyTheme = (isDark) => {
+    if (isDark) ROOT.classList.add('qfc-dark'); else ROOT.classList.remove('qfc-dark');
+    localStorage.setItem('qfc-theme', isDark ? 'dark' : 'light');
+    const pressed = isDark ? 'true' : 'false';
+    document.getElementById('themeToggle')?.setAttribute('aria-pressed', pressed);
+    document.getElementById('themeToggleM')?.setAttribute('aria-pressed', pressed);
+    document.getElementById('themeIcon').textContent = isDark ? '☀️' : '🌙';
+  };
+  const saved = localStorage.getItem('qfc-theme');
+  applyTheme(saved === 'dark');
+
+  document.getElementById('themeToggle')?.addEventListener('click', () => {
+    applyTheme(!ROOT.classList.contains('qfc-dark'));
+  });
+  document.getElementById('themeToggleM')?.addEventListener('click', () => {
+    applyTheme(!ROOT.classList.contains('qfc-dark'));
+  });
+
+  // ===== Mobile Menu =====
+  const burger = document.getElementById('qfcBurger');
+  const mobile = document.getElementById('qfcMobile');
+  burger.addEventListener('click', () => {
+    const open = burger.getAttribute('aria-expanded') === 'true';
+    burger.setAttribute('aria-expanded', String(!open));
+    mobile.hidden = open;
+  });
+  // Close mobile on link click
+  mobile.addEventListener('click', (e) => {
+    const a = e.target.closest('a');
+    if (a) { burger.setAttribute('aria-expanded','false'); mobile.hidden = true; }
+  });
+  mobile.hidden = true;
+
+  // ===== Dropdown (Desktop) =====
+  const ddBtn = document.getElementById('marketsBtn');
+  const ddMenu = document.getElementById('marketsMenu');
+  function setDrop(open){
+    ddBtn.setAttribute('aria-expanded', String(open));
+    ddMenu.dataset.open = String(open);
+  }
+  ddBtn.addEventListener('click', (e) => { e.stopPropagation(); setDrop(ddMenu.dataset.open !== 'true'); });
+  ddBtn.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown'){ setDrop(true); ddMenu.querySelector('a')?.focus(); }
+  });
+  ddMenu.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape'){ setDrop(false); ddBtn.focus(); }
+  });
+  document.addEventListener('click', (e) => {
+    if (!ddMenu.contains(e.target) && !ddBtn.contains(e.target)) setDrop(false);
+  });
+
+  // ===== Elevate header on scroll =====
+  const header = document.getElementById('qfcHeader');
+  const elev = () => {
+    if (window.scrollY > 6) header.classList.add('qfc-header--elev');
+    else header.classList.remove('qfc-header--elev');
+  };
+  elev();
+  window.addEventListener('scroll', elev, { passive: true });
+</script>
+
+<!-- Dummy page content (remove later) -->
+
+
+</body>
+</html>
