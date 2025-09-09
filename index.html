@@ -1,363 +1,374 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="stylesheet" href="style.css">
-  <script src="script.js" defer></script>
-<title>QuanFin Capital</title>
-<style>
-  :root {
-    --qfc-bg: rgba(255,255,255,0.65);
-    --qfc-fg: #0b1324;
-    --qfc-muted: #5a6073;
-    --qfc-accent: #1d4ed8;
-    --qfc-border: rgba(15, 23, 42, 0.08);
-    --qfc-shadow: 0 10px 30px rgba(2, 6, 23, 0.08);
-  }
-  .qfc-dark {
-    --qfc-bg: rgba(15,23,42,0.55);
-    --qfc-fg: #e6e8ee;
-    --qfc-muted: #aab0c0;
-    --qfc-accent: #60a5fa;
-    --qfc-border: rgba(255,255,255,0.12);
-    --qfc-shadow: 0 10px 30px rgba(0,0,0,0.35);
-    background: #0b1020;
-    color: var(--qfc-fg);
-  }
-
-  /* ===== Header / Shell ===== */
-  body { margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"; color: var(--qfc-fg); background: #f6f8fb; }
-  .qfc-dark body { background: #0b1020; }
-  .qfc-header {
-    position: sticky; top: 0; z-index: 1000;
-    backdrop-filter: saturate(120%) blur(10px);
-    background: var(--qfc-bg);
-    border-bottom: 1px solid var(--qfc-border);
-  }
-  .qfc-header--elev {
-    box-shadow: var(--qfc-shadow);
-  }
-  .qfc-container {
-    max-width: 1200px; margin: 0 auto; padding: 12px 18px; display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center;
-  }
-
-  /* ===== Brand ===== */
-  .qfc-brand { display: inline-flex; align-items: center; gap: 5px; text-decoration: none; }
-  .qfc-logo-img { max-height: 50px; height: auto; width: auto; display: block; object-fit: contain; }
-  .qfc-brand__name { font-weight: 700; letter-spacing: .2px; color: var(--qfc-fg); font-size: 1.05rem; }
-  .qfc-brand__sub { display: block; font: size 5px;; color: blue; margin-top: -2px;  }
-
-  /* ===== Desktop Nav ===== */
-  .qfc-nav { display: none; align-items: center; gap: 8px; }
-  .qfc-nav__list { display: inline-flex; gap: 4px; list-style: none; margin: 0; padding: 0; }
-  .qfc-link {
-    position: relative; display: inline-flex; align-items: center; gap: 6px;
-    padding: 10px 12px; border-radius: 12px; text-decoration: none;
-    color: var(--qfc-fg); font-weight: 500;
-  }
-  .qfc-link:hover, .qfc-link:focus { background: rgba(100,116,139,.12); outline: none; }
-  .qfc-link[aria-current="page"]::after {
-    content: ""; position: absolute; left: 12px; right: 12px; bottom: 6px; height: 2px; background: var(--qfc-accent); border-radius: 2px;
-  }
-
-  /* Dropdown */
-  .qfc-dropdown { position: relative; }
-  .qfc-dropbtn { cursor: pointer; }
-  .qfc-menu {
-    position: absolute; top: calc(100% + 8px); left: 0; min-width: 230px;
-    background: var(--qfc-bg); border: 1px solid var(--qfc-border); border-radius: 14px;
-    box-shadow: var(--qfc-shadow); padding: 6px; display: none;
-  }
-  .qfc-menu[data-open="true"] { display: block; }
-  .qfc-menu a { display: flex; justify-content: space-between; gap: 8px; padding: 10px 12px; border-radius: 10px; text-decoration: none; color: var(--qfc-fg); }
-  .qfc-menu a:hover, .qfc-menu a:focus { background: rgba(100,116,139,.12); outline: none; }
-  .qfc-kbd { font: 600 10px/1 ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; color: var(--qfc-muted); border: 1px solid var(--qfc-border); padding: 2px 6px; border-radius: 6px; }
-
-  /* ===== Right Controls ===== */
-  .qfc-cta { display: none; align-items: center; gap: 10px; }
-  .qfc-btn {
-    background: var(--qfc-fg); color: white; padding: 10px 14px; border-radius: 12px; text-decoration: none; font-weight: 600;
-  }
-  .qfc-btn:hover { filter: brightness(0.95); }
-  .qfc-toggle {
-    display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--qfc-border);
-    padding: 8px 10px; border-radius: 12px; cursor: pointer; user-select: none;
-  }
-
-  /* ===== Mobile ===== */
-  .qfc-burger {
-    display: inline-flex; flex-direction: column; gap: 4px; width: 42px; height: 38px; align-items: center; justify-content: center;
-    border: 1px solid var(--qfc-border); border-radius: 12px; background: transparent; cursor: pointer;
-  }
-  .qfc-burger span { width: 18px; height: 2px; background: var(--qfc-fg); border-radius: 2px; transition: transform .2s ease, opacity .2s ease; }
-  .qfc-burger[aria-expanded="true"] span:nth-child(1){ transform: translateY(6px) rotate(45deg);}
-  .qfc-burger[aria-expanded="true"] span:nth-child(2){ opacity: 0;}
-  .qfc-burger[aria-expanded="true"] span:nth-child(3){ transform: translateY(-6px) rotate(-45deg);}
-
-  .qfc-mobile {
-    display: none; border-top: 1px solid var(--qfc-border); background: var(--qfc-bg);
-  }
-  .qfc-mobile[hidden] { display: none !important; }
-  .qfc-mobile__list { list-style: none; margin: 0; padding: 8px; display: grid; gap: 6px; }
-  .qfc-mobile__link {
-    display: flex; justify-content: space-between; align-items: center; padding: 12px 10px; border-radius: 12px; text-decoration: none; color: var(--qfc-fg);
-  }
-  .qfc-mobile__link:hover { background: rgba(100,116,139,.12); }
-
-  /* ===== Layout breakpoints ===== */
-  @media (min-width: 900px) {
-    .qfc-nav { display: inline-flex; }
-    .qfc-cta { display: inline-flex; }
-    .qfc-burger { display: none; }
-    .qfc-mobile { display: none !important; }
-    .qfc-container { grid-template-columns: auto 1fr auto; }
-  }
-
-  /* ===== Focus style ===== */
-  :where(a,button,.qfc-toggle):focus-visible {
-    outline: 2px solid var(--qfc-accent);
-    outline-offset: 2px;
-    border-radius: 12px;
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuanFin Capital - Empowering Traders with Precision and Efficiency</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
+    <!-- Loading Animation -->
+    <div class="loader" id="loader">
+        <div class="loader-content">
+            <div class="loader-spinner"></div>
+            <h2>QuanFin Capital</h2>
+        </div>
+    </div>
 
-<header class="qfc-header" id="qfcHeader">
-  <div class="qfc-container">
-    <!-- Brand -->
-    <a class="qfc-brand" href="#" aria-label="QuanFin Capital — Home">
-      <img src="logo_-_Copy-removebg-preview.png" alt="QuanFin Capital Logo" class="qfc-logo-img" />
-      
-    </a>
-
-    <!-- Desktop Nav -->
-    <nav class="qfc-nav" aria-label="Primary">
-      <ul class="qfc-nav__list">
-        <li><a class="qfc-link" href="#home" aria-current="page">Home</a></li>
-        <li class="qfc-dropdown">
-          <button class="qfc-link qfc-dropbtn" id="marketsBtn" aria-haspopup="true" aria-expanded="false" aria-controls="marketsMenu">
-            Markets
-            <svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 10l5 5 5-5z"/></svg>
-          </button>
-          <div class="qfc-menu" id="marketsMenu" role="menu" aria-labelledby="marketsBtn" data-open="false">
-            <a href="#equities" role="menuitem">Equities <span class="qfc-kbd">EQ</span></a>
-            <a href="#futures" role="menuitem">Futures <span class="qfc-kbd">FU</span></a>
-            <a href="#fx" role="menuitem">FX <span class="qfc-kbd">FX</span></a>
-            <a href="#crypto" role="menuitem">Crypto <span class="qfc-kbd">CR</span></a>
-          </div>
-        </li>
-        <li><a class="qfc-link" href="#programs">Programs</a></li>
-        <li><a class="qfc-link" href="#careers">Careers</a></li>
-        <li><a class="qfc-link" href="#contact">Contact</a></li>
-      </ul>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2>QuanFin Capital</h2>
+            </div>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#services" class="nav-link">Services</a></li>
+                <li><a href="#technology" class="nav-link">Technology</a></li>
+                <li><a href="#team" class="nav-link">Team</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
     </nav>
 
-    <!-- Actions -->
-    <div class="qfc-cta">
-      <button class="qfc-toggle" id="themeToggle" aria-pressed="false" aria-label="Toggle dark mode">
-        <span id="themeIcon">🌙</span> <span class="qfc-toggle__txt">Theme</span>
-      </button>
-      <a class="qfc-btn" href="#apply">Apply</a>
-    </div>
-
-    <!-- Mobile burger -->
-    <button class="qfc-burger" id="qfcBurger" aria-controls="qfcMobile" aria-expanded="false" aria-label="Open menu">
-      <span></span><span></span><span></span>
-    </button>
-  </div>
-
-  <!-- Mobile panel -->
-  <nav class="qfc-mobile" id="qfcMobile" aria-label="Mobile">
-    <ul class="qfc-mobile__list">
-      <li><a class="qfc-mobile__link" href="#home">Home</a></li>
-      <li><details>
-        <summary class="qfc-mobile__link">Markets</summary>
-        <div style="padding:6px 10px; display:grid; gap:6px;">
-          <a class="qfc-mobile__link" href="#equities">Equities</a>
-          <a class="qfc-mobile__link" href="#futures">Futures</a>
-          <a class="qfc-mobile__link" href="#fx">FX</a>
-          <a class="qfc-mobile__link" href="#crypto">Crypto</a>
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-background">
+            <div class="particles"></div>
         </div>
-      </details></li>
-      <li><a class="qfc-mobile__link" href="#programs">Programs</a></li>
-      <li><a class="qfc-mobile__link" href="#careers">Careers</a></li>
-      <li><a class="qfc-mobile__link" href="#contact">Contact</a></li>
-      <li style="display:flex; gap:10px; padding:6px 2px;">
-        <button class="qfc-toggle" id="themeToggleM" aria-pressed="false">🌙 Theme</button>
-        <a class="qfc-btn" href="#apply" style="flex:1; text-align:center;">Apply</a>
-      </li>
-    </ul>
-  </nav>
-</header>
+        <div class="hero-content">
+            <div class="container">
+                <h1 class="hero-title">
+                    <span class="hero-line">Empowering Traders</span>
+                    <span class="hero-line">with Precision</span>
+                    <span class="hero-line accent">and Efficiency</span>
+                </h1>
+                <p class="hero-subtitle">Advanced systems, AI, and data analytics for cutting-edge trading strategies</p>
+                <div class="hero-actions">
+                    <button class="btn btn--primary btn--lg" onclick="scrollToSection('contact')">Get Started</button>
+                    <button class="btn btn--outline btn--lg" onclick="openModal('learn-more')">Learn More</button>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<section class="hero">
-    <div class="hero-content">
-      <h1>Technology-Driven Quantitative Trading</h1>
-      <p>QuanFin Capital leverages advanced systems, AI, and data analytics to empower traders with precision and efficiency.</p>
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="section-header">
+                <h2>About QuanFin Capital</h2>
+                <p>Building cutting-edge strategies at the intersection of finance and technology</p>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>QuanFin Capital is a proprietary trading firm committed to building cutting-edge strategies and leveraging quantitative research. Our team thrives at the intersection of finance and technology.</p>
+                    <p>We design, test, and deploy trading models that adapt to dynamic markets. Our approach integrates statistics, machine learning, and risk management to deliver consistent performance.</p>
+                    <p>Through rigorous research, real-time monitoring, and automation, QuanFin Capital delivers a competitive edge in trading. We combine strategy with execution to empower traders.</p>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" data-target="10">0</div>
+                        <div class="stat-label">Years Experience</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" data-target="500">0</div>
+                        <div class="stat-label">Assets Under Management (M+)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" data-target="99.9">0</div>
+                        <div class="stat-label">System Uptime (%)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Market Monitoring</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <div class="container">
+            <div class="section-header">
+                <h2>Our Services</h2>
+                <p>Comprehensive solutions for modern trading challenges</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">🤖</div>
+                    <h3>AI-Driven Trading Models</h3>
+                    <p>Advanced algorithms powered by machine learning and artificial intelligence</p>
+                    <button class="btn btn--outline" onclick="openModal('ai-models')">Learn More</button>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🛡️</div>
+                    <h3>Risk Management Systems</h3>
+                    <p>Comprehensive risk assessment and management frameworks</p>
+                    <button class="btn btn--outline" onclick="openModal('risk-management')">Learn More</button>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">📊</div>
+                    <h3>Real-Time Analytics</h3>
+                    <p>Live market monitoring and data analysis capabilities</p>
+                    <button class="btn btn--outline" onclick="openModal('analytics')">Learn More</button>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🔬</div>
+                    <h3>Quantitative Research</h3>
+                    <p>Data-driven research and strategy development</p>
+                    <button class="btn btn--outline" onclick="openModal('research')">Learn More</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology Section -->
+    <section id="technology" class="technology">
+        <div class="container">
+            <div class="section-header">
+                <h2>Technology Excellence</h2>
+                <p>Cutting-edge technology powering our trading operations</p>
+            </div>
+            <div class="tech-content">
+                <div class="tech-features">
+                    <div class="tech-feature">
+                        <i class="fas fa-brain"></i>
+                        <h4>Machine Learning</h4>
+                        <p>Advanced ML algorithms for pattern recognition and predictive modeling</p>
+                    </div>
+                    <div class="tech-feature">
+                        <i class="fas fa-chart-line"></i>
+                        <h4>Real-Time Processing</h4>
+                        <p>Low-latency systems for instant market data processing and execution</p>
+                    </div>
+                    <div class="tech-feature">
+                        <i class="fas fa-shield-alt"></i>
+                        <h4>Risk Analytics</h4>
+                        <p>Sophisticated risk modeling and portfolio optimization tools</p>
+                    </div>
+                    <div class="tech-feature">
+                        <i class="fas fa-database"></i>
+                        <h4>Big Data</h4>
+                        <p>Massive data processing capabilities for comprehensive market analysis</p>
+                    </div>
+                </div>
+                <div class="tech-visual">
+                    <div class="tech-circle">
+                        <div class="tech-orbit orbit-1"></div>
+                        <div class="tech-orbit orbit-2"></div>
+                        <div class="tech-orbit orbit-3"></div>
+                        <div class="tech-center">AI</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section id="team" class="team">
+        <div class="container">
+            <div class="section-header">
+                <h2>Our Leadership Team</h2>
+                <p>Industry experts driving innovation in quantitative trading</p>
+            </div>
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-avatar">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <h3>Dr. Sarah Chen</h3>
+                    <h4>Chief Quantitative Officer</h4>
+                    <p>PhD in Financial Mathematics, 15+ years in algorithmic trading</p>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar">
+                        <i class="fas fa-user-cog"></i>
+                    </div>
+                    <h3>Michael Rodriguez</h3>
+                    <h4>Head of Technology</h4>
+                    <p>Former Google engineer, expert in machine learning systems</p>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <h3>Emma Thompson</h3>
+                    <h4>Risk Management Director</h4>
+                    <p>CFA, former JPMorgan risk analyst with 12 years experience</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2>Get In Touch</h2>
+                <p>Ready to explore opportunities in quantitative trading?</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h3>Contact Information</h3>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>contact@quanfincapital.com</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span>+1 (555) 123-4567</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>New York, NY 10001</span>
+                    </div>
+                </div>
+                <form class="contact-form" id="contact-form">
+                    <div class="form-group">
+                        <input type="text" id="name" name="name" class="form-control" placeholder="Your Name" required>
+                        <span class="form-error" id="name-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="email" name="email" class="form-control" placeholder="Your Email" required>
+                        <span class="form-error" id="email-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="subject" name="subject" class="form-control" placeholder="Subject" required>
+                        <span class="form-error" id="subject-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="message" name="message" class="form-control" rows="5" placeholder="Your Message" required></textarea>
+                        <span class="form-error" id="message-error"></span>
+                    </div>
+                    <button type="submit" class="btn btn--primary btn--full-width">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>QuanFin Capital</h3>
+                    <p>Empowering traders with precision and efficiency through advanced technology and quantitative research.</p>
+                    <div class="social-links">
+                        <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="#services">AI-Driven Trading</a></li>
+                        <li><a href="#services">Risk Management</a></li>
+                        <li><a href="#services">Real-Time Analytics</a></li>
+                        <li><a href="#services">Quantitative Research</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#team">Our Team</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                        <li><a href="#">Careers</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p>contact@quanfincapital.com</p>
+                    <p>+1 (555) 123-4567</p>
+                    <p>New York, NY 10001</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 QuanFin Capital. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-top" id="scroll-top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- Modals -->
+    <div class="modal hidden" id="learn-more">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2>About QuanFin Capital</h2>
+            <p>We believe in transparency and accessibility. Whether you're a budding trader or an experienced professional, reach out to us to explore opportunities in quant trading.</p>
+            <p>Our mission is to deliver consistent performance through the integration of statistics, machine learning, and risk management in dynamic market conditions.</p>
+        </div>
     </div>
-  </section>
 
-  <!-- Who We Are -->
-  <section>
-    <h2>Who We Are</h2>
-    <p>QuanFin Capital is a proprietary trading firm committed to building cutting-edge strategies and leveraging quantitative research. Our team thrives at the intersection of finance and technology.</p>
-    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475" alt="Team working">
-  </section>
-
-  <!-- What We Do -->
-  <section>
-    <h2>What We Do</h2>
-    <p>We design, test, and deploy trading models that adapt to dynamic markets. Our approach integrates statistics, machine learning, and risk management to deliver consistent performance.</p>
-    <img src="https://plus.unsplash.com/premium_photo-1756763706987-f92c08077b5d?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Data systems">
-  </section>
-
-  <!-- How We Reach You -->
-  <section>
-    <h2>How to Reach Us</h2>
-    <p>We believe in transparency and accessibility. Whether you’re a budding trader or an experienced professional, reach out to us to explore opportunities in quant trading.</p>
-    <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d" alt="Communication">
-  </section>
-
-  <!-- How We Do -->
-  <section>
-    <h2>How We Do</h2>
-    <p>Through rigorous research, real-time monitoring, and automation, QuanFin Capital delivers a competitive edge in trading. We combine strategy with execution to empower traders.</p>
-    <img src="https://images.unsplash.com/photo-1556740749-887f6717d7e4" alt="Technology systems">
-  </section>
-  <!-- footer-->
-   <!-- ===== FOOTER START ===== -->
-<footer class="qfc-footer">
-  <div class="qfc-footer-container">
-    
-    <!-- Company Info -->
-    <div class="qfc-footer-col">
-      <img src="logo_-_Copy-removebg-preview.png" alt="QuanFin Capital Logo" class="qfc-footer-logo">
-      <p class="qfc-footer-about">
-        QuanFin Capital is a proprietary trading firm leveraging technology, 
-        data, and advanced systems to redefine the future of quantitative trading.
-      </p>
+    <div class="modal hidden" id="ai-models">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2>AI-Driven Trading Models</h2>
+            <p>Our proprietary AI models leverage deep learning and neural networks to identify market patterns and execute trades with unprecedented accuracy.</p>
+            <ul>
+                <li>Machine learning algorithms for pattern recognition</li>
+                <li>Neural networks for predictive modeling</li>
+                <li>Natural language processing for news sentiment analysis</li>
+                <li>Reinforcement learning for adaptive strategies</li>
+            </ul>
+        </div>
     </div>
 
-    <!-- Quick Links -->
-    <div class="qfc-footer-col">
-      <h3>Quick Links</h3>
-      <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">About Us</a></li>
-        <li><a href="#">Trading Technology</a></li>
-        <li><a href="#">Careers</a></li>
-        <li><a href="#">Contact</a></li>
-      </ul>
+    <div class="modal hidden" id="risk-management">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2>Risk Management Systems</h2>
+            <p>Comprehensive risk assessment frameworks that protect capital while maximizing returns through sophisticated modeling techniques.</p>
+            <ul>
+                <li>Value at Risk (VaR) calculations</li>
+                <li>Portfolio optimization algorithms</li>
+                <li>Real-time risk monitoring</li>
+                <li>Stress testing and scenario analysis</li>
+            </ul>
+        </div>
     </div>
 
-    <!-- Contact Info -->
-    <div class="qfc-footer-col">
-      <h3>Contact Us</h3>
-      <ul>
-        <li>📍 1st Floor, Dohra Road, Bareilly, India</li>
-        <li><img src="email_img.png" width="20px">quanfincapital@gmail.com</li>
-        <li>📞 +91 9520597569</li>
-      </ul>
+    <div class="modal hidden" id="analytics">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2>Real-Time Analytics</h2>
+            <p>Advanced analytics platform providing instant insights into market conditions and trading performance.</p>
+            <ul>
+                <li>Live market data processing</li>
+                <li>Performance attribution analysis</li>
+                <li>Real-time P&L monitoring</li>
+                <li>Custom dashboard creation</li>
+            </ul>
+        </div>
     </div>
 
-    <!-- Newsletter -->
-    <div class="qfc-footer-col">
-      <h3>Stay Updated</h3>
-      <p>Subscribe to our newsletter for the latest market insights.</p>
-      <form class="qfc-footer-form">
-        <input type="email" placeholder="Enter your email" required>
-        <button type="submit">Subscribe</button>
-      </form>
-      <div class="qfc-footer-socials">
-        <a href="https://www.instagram.com/quanfincapital?igsh=MW4xbW8zcjIxdnBjZQ==" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram"></a>
-        <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733635.png" alt="Twitter"></a>
-        <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111468.png" alt="LinkedIn"></a>
-        
-      </div>
+    <div class="modal hidden" id="research">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2>Quantitative Research</h2>
+            <p>Data-driven research methodologies that form the foundation of our trading strategies and risk management approaches.</p>
+            <ul>
+                <li>Statistical analysis and modeling</li>
+                <li>Backtesting and validation</li>
+                <li>Alpha generation research</li>
+                <li>Market microstructure analysis</li>
+            </ul>
+        </div>
     </div>
 
-  </div>
-
-  <!-- Bottom Bar -->
-  <div class="qfc-footer-bottom">
-    <p>© 2025 QuanFin Capital. All rights reserved.</p>
-    <ul class="qfc-footer-legal">
-      <li><a href="#">Privacy Policy</a></li>
-      <li><a href="#">Terms of Use</a></li>
-      <li><a href="#">Disclaimer</a></li>
-    </ul>
-  </div>
-</footer>
-<!-- ===== FOOTER END ===== -->
-
-<script>
-  // ===== Persisted Theme =====
-  const ROOT = document.documentElement;
-  const applyTheme = (isDark) => {
-    if (isDark) ROOT.classList.add('qfc-dark'); else ROOT.classList.remove('qfc-dark');
-    localStorage.setItem('qfc-theme', isDark ? 'dark' : 'light');
-    const pressed = isDark ? 'true' : 'false';
-    document.getElementById('themeToggle')?.setAttribute('aria-pressed', pressed);
-    document.getElementById('themeToggleM')?.setAttribute('aria-pressed', pressed);
-    document.getElementById('themeIcon').textContent = isDark ? '☀️' : '🌙';
-  };
-  const saved = localStorage.getItem('qfc-theme');
-  applyTheme(saved === 'dark');
-
-  document.getElementById('themeToggle')?.addEventListener('click', () => {
-    applyTheme(!ROOT.classList.contains('qfc-dark'));
-  });
-  document.getElementById('themeToggleM')?.addEventListener('click', () => {
-    applyTheme(!ROOT.classList.contains('qfc-dark'));
-  });
-
-  // ===== Mobile Menu =====
-  const burger = document.getElementById('qfcBurger');
-  const mobile = document.getElementById('qfcMobile');
-  burger.addEventListener('click', () => {
-    const open = burger.getAttribute('aria-expanded') === 'true';
-    burger.setAttribute('aria-expanded', String(!open));
-    mobile.hidden = open;
-  });
-  // Close mobile on link click
-  mobile.addEventListener('click', (e) => {
-    const a = e.target.closest('a');
-    if (a) { burger.setAttribute('aria-expanded','false'); mobile.hidden = true; }
-  });
-  mobile.hidden = true;
-
-  // ===== Dropdown (Desktop) =====
-  const ddBtn = document.getElementById('marketsBtn');
-  const ddMenu = document.getElementById('marketsMenu');
-  function setDrop(open){
-    ddBtn.setAttribute('aria-expanded', String(open));
-    ddMenu.dataset.open = String(open);
-  }
-  ddBtn.addEventListener('click', (e) => { e.stopPropagation(); setDrop(ddMenu.dataset.open !== 'true'); });
-  ddBtn.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowDown'){ setDrop(true); ddMenu.querySelector('a')?.focus(); }
-  });
-  ddMenu.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape'){ setDrop(false); ddBtn.focus(); }
-  });
-  document.addEventListener('click', (e) => {
-    if (!ddMenu.contains(e.target) && !ddBtn.contains(e.target)) setDrop(false);
-  });
-
-  // ===== Elevate header on scroll =====
-  const header = document.getElementById('qfcHeader');
-  const elev = () => {
-    if (window.scrollY > 6) header.classList.add('qfc-header--elev');
-    else header.classList.remove('qfc-header--elev');
-  };
-  elev();
-  window.addEventListener('scroll', elev, { passive: true });
-</script>
-
-<!-- Dummy page content (remove later) -->
-
-
+    <script src="app.js"></script>
 </body>
 </html>
