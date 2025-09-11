@@ -1,51 +1,45 @@
-[style.css](https://github.com/user-attachments/files/22092087/style.css)
-[index.html](https://github.com/user-attachments/files/22092085/index.html)
-# QuanFin-Capital
-A website which is my first online business profile.
-# QuanFin Capital
+<h1> QuanFin Capital </h1>
+<h1>🚀 Project Overview</h1>
+QuanFin Capital is a single-page interactive web application that serves as the professional online profile for a proprietary trading firm. The site showcases the firm's expertise in quantitative research, advanced technology, and data-driven trading strategies. It is built to be responsive, dynamic, and visually engaging.
 
-🚀 **QuanFin Capital** is a proprietary trading firm leveraging data, technology, and quantitative strategies to generate alpha in the financial markets.  
+<h1>✨ Key Features</h1>
+Interactive Dashboard: Simulates real-time market data and provides a dynamic view of the firm's analytical tools.
 
-We focus on **systematic trading, data-driven research, and risk management** while building cutting-edge tools to empower trading decisions.
+Dynamic Charts: Visualizes portfolio allocation, performance over time, and risk assessment using Chart.js for a clear and interactive experience.
 
----
+Trading Calculator: An interactive tool allowing users to model potential trading outcomes by adjusting key variables.
 
-## 🔹 What We Do
-- 📊 Develop and backtest **quantitative trading models**
-- 🧠 Apply **machine learning** and **data analytics** in financial markets
-- ⚡ Build **high-performance trading infrastructure**
-- 🌍 Democratize knowledge by sharing insights & educational resources
+Modern UI/UX: Features a clean, modern aesthetic with smooth CSS animations, scroll-triggered effects, and a theme toggle for light and dark modes.
 
----
+Glassmorphism Design: A stylish glassmorphism effect is applied to key sections and dashboard cards.
 
-## 📂 Repository Overview
-This repository contains:
-- 📘 Documentation of trading workflows
-- 📈 Sample quant strategies & models
-- 💻 Tools and scripts for research
-- 🧩 Projects related to finance & technology
+Live Alerts & Sentiment Gauge: Includes a simulated stream of live market alerts and a dynamic gauge that reflects market sentiment.
 
----
+Comprehensive Sections: The page is structured into clear, navigable sections: Home, Dashboard, About, Services, Technology, Team, and Contact.
 
-## 🛠️ Tech Stack
-- **Languages**: Python, JavaScript, C++  
-- **Libraries**: Pandas, NumPy, Matplotlib, scikit-learn  
-- **Databases**: MongoDB, PostgreSQL  
-- **Frameworks**: React.js, Node.js  
+<h1>🛠️ Tech Stack</h1>
+Languages: HTML, CSS, JavaScript
 
----
+<h4>Libraries</h4>: Chart.js, Font Awesome
 
-## 🌟 Vision
-> “Turning Data into Capital.”  
+<h4>Styling</h4>: Custom CSS with CSS variables for theming.
 
-We aim to build **India’s next-gen trading desk**, combining **finance + technology + research**.
+<h4>Core Logic</h4>: Vanilla JavaScript handles all interactive elements, data manipulation, and animations.
 
----
+<h1>🚀 Getting Started</h1>
+To run this project, simply open the index.html file in your web browser. All necessary code (HTML, CSS, and JavaScript) is contained within the provided files.
 
-## 📫 Connect With Us
-- 🌐 Website: *Coming Soon*  
-- 📧 Email: **quanfincapital@gmail.com**  
-- 📷 Instagram: [@quanfincapital](https://instagram.com/quanfincapital)
+<h1>🌟 Vision</h1>
+“Turning Data into Capital.”
 
----
+We aim to build India’s next-gen trading desk, combining finance + technology + research.
+
+📫 Connect With Us
+📧 Email: quanfincapital@gmail.com
+
+📷 Instagram: @quanfincapital
+
+💻 GitHub: Ali-Arshad-110
+
+⭐ Don’t forget to star this repository if you find the work inspiring!
 ⭐ Don’t forget to star this repository if you like the work!
