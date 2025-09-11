@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QuanFin Capital - Empowering Traders with Precision and Efficiency</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
     <!-- Loading Animation -->
     <div class="loader" id="loader">
@@ -24,24 +27,61 @@
             </div>
             <ul class="nav-menu" id="nav-menu">
                 <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#dashboard" class="nav-link">Dashboard</a></li>
                 <li><a href="#about" class="nav-link">About</a></li>
                 <li><a href="#services" class="nav-link">Services</a></li>
                 <li><a href="#technology" class="nav-link">Technology</a></li>
                 <li><a href="#team" class="nav-link">Team</a></li>
                 <li><a href="#contact" class="nav-link">Contact</a></li>
             </ul>
-            <div class="hamburger" id="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
+            <div class="nav-actions">
+                <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+                    <i class="fas fa-sun"></i>
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
             </div>
         </div>
     </nav>
 
+    <!-- Market Status Bar -->
+    <div class="market-status-bar">
+        <div class="container">
+            <div class="market-info">
+                <div class="market-status">
+                    <span class="status-indicator" id="market-indicator"></span>
+                    <span id="market-status-text">Market Closed</span>
+                </div>
+                <div class="live-clock">
+                    <i class="fas fa-clock"></i>
+                    <span id="live-time"></span>
+                </div>
+            </div>
+            <div class="ticker-scroll">
+                <div class="ticker-content" id="ticker-content">
+                    <span class="ticker-item">BTC/USD: $43,250.75 <span class="positive">+2.34%</span></span>
+                    <span class="ticker-item">ETH/USD: $2,687.12 <span class="negative">-1.23%</span></span>
+                    <span class="ticker-item">SPY: $445.67 <span class="positive">+0.87%</span></span>
+                    <span class="ticker-item">QQQ: $378.29 <span class="positive">+1.45%</span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Hero Section -->
     <section id="home" class="hero">
-        <div class="hero-background">
-            <div class="particles"></div>
+        <div class="video-background">
+            <video autoplay loop muted playsinline>
+                <source src="video.mp4" type="video/mp4">
+                <!-- Add more <source> tags for different video formats for broader browser compatibility -->
+                <source src="your-video.webm" type="video/webm">
+                Your browser does not support the video tag.
+
+            </video>
         </div>
         <div class="hero-content">
             <div class="container">
@@ -50,10 +90,145 @@
                     <span class="hero-line">with Precision</span>
                     <span class="hero-line accent">and Efficiency</span>
                 </h1>
-                <p class="hero-subtitle">Advanced systems, AI, and data analytics for cutting-edge trading strategies</p>
+                <p class="hero-subtitle">Advanced systems, AI, and data analytics for cutting-edge trading strategies
+                </p>
                 <div class="hero-actions">
                     <button class="btn btn--primary btn--lg" onclick="scrollToSection('contact')">Get Started</button>
                     <button class="btn btn--outline btn--lg" onclick="openModal('learn-more')">Learn More</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Real-Time Dashboard -->
+    <section id="dashboard" class="dashboard">
+        <div class="container">
+            <div class="section-header">
+                <h2>Real-Time Trading Dashboard</h2>
+                <p>Live market data and analytics powered by advanced algorithms</p>
+            </div>
+
+            <div class="dashboard-grid">
+                <!-- Trading Calculator -->
+                <div class="dashboard-card glassmorphism">
+                    <div class="card-header">
+                        <h3><i class="fas fa-calculator"></i> Trading Calculator</h3>
+                    </div>
+                    <div class="calculator-form">
+                        <div class="form-group">
+                            <label>Initial Capital ($)</label>
+                            <input type="number" id="initial-capital" value="10000" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Risk per Trade (%)</label>
+                            <input type="number" id="risk-percentage" value="2" max="10" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Win Rate (%)</label>
+                            <input type="number" id="win-rate" value="60" max="100" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Risk/Reward Ratio</label>
+                            <input type="number" id="risk-reward" value="1.5" step="0.1" class="form-control">
+                        </div>
+                        <div class="calculator-results">
+                            <div class="result-item">
+                                <span>Position Size:</span>
+                                <span id="position-size">$200</span>
+                            </div>
+                            <div class="result-item">
+                                <span>Expected Return:</span>
+                                <span id="expected-return" class="positive">+$1,200/month</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Portfolio Allocation Chart -->
+                <div class="dashboard-card glassmorphism">
+                    <div class="card-header">
+                        <h3><i class="fas fa-pie-chart"></i> Portfolio Allocation</h3>
+                    </div>
+                    <div class="chart-container" style="position: relative; height: 300px;">
+                        <canvas id="portfolio-chart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Market Sentiment Gauge -->
+                <div class="dashboard-card glassmorphism">
+                    <div class="card-header">
+                        <h3><i class="fas fa-gauge"></i> Market Sentiment</h3>
+                    </div>
+                    <div class="sentiment-gauge">
+                        <div class="gauge-container">
+                            <svg class="gauge-svg" viewBox="0 0 200 120">
+                                <path class="gauge-bg" d="M 30 100 A 70 70 0 0 1 170 100" stroke="var(--color-border)"
+                                    stroke-width="8" fill="none" />
+                                <path class="gauge-fill" id="sentiment-arc" d="M 30 100 A 70 70 0 0 1 170 100"
+                                    stroke="var(--color-success)" stroke-width="8" fill="none" />
+                                <circle class="gauge-pointer" id="sentiment-pointer" cx="100" cy="100" r="4"
+                                    fill="var(--color-primary)" />
+                            </svg>
+                            <div class="gauge-value">
+                                <span id="sentiment-value">72</span>%
+                                <div class="sentiment-label">Bullish</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Performance Chart -->
+                <div class="dashboard-card glassmorphism full-width">
+                    <div class="card-header">
+                        <h3><i class="fas fa-chart-line"></i> Performance Overview</h3>
+                        <div class="chart-controls">
+                            <button class="btn btn--sm btn--outline active" data-period="1M">1M</button>
+                            <button class="btn btn--sm btn--outline" data-period="3M">3M</button>
+                            <button class="btn btn--sm btn--outline" data-period="6M">6M</button>
+                            <button class="btn btn--sm btn--outline" data-period="1Y">1Y</button>
+                        </div>
+                    </div>
+                    <div class="chart-container" style="position: relative; height: 400px;">
+                        <canvas id="performance-chart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Risk Assessment Matrix -->
+                <div class="dashboard-card glassmorphism">
+                    <div class="card-header">
+                        <h3><i class="fas fa-shield-alt"></i> Risk Assessment</h3>
+                    </div>
+                    <div class="risk-matrix">
+                        <div class="risk-item">
+                            <span class="risk-label">VaR (95%)</span>
+                            <span class="risk-value negative">-2.3%</span>
+                        </div>
+                        <div class="risk-item">
+                            <span class="risk-label">Sharpe Ratio</span>
+                            <span class="risk-value positive">2.47</span>
+                        </div>
+                        <div class="risk-item">
+                            <span class="risk-label">Max Drawdown</span>
+                            <span class="risk-value negative">-1.2%</span>
+                        </div>
+                        <div class="risk-item">
+                            <span class="risk-label">Volatility</span>
+                            <span class="risk-value">8.4%</span>
+                        </div>
+                    </div>
+                    <div class="chart-container" style="position: relative; height: 200px;">
+                        <canvas id="risk-chart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Live Alerts -->
+                <div class="dashboard-card glassmorphism">
+                    <div class="card-header">
+                        <h3><i class="fas fa-bell"></i> Live Alerts</h3>
+                    </div>
+                    <div class="alerts-list" id="alerts-list">
+                        <!-- Dynamic alerts will be inserted here -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -68,24 +243,32 @@
             </div>
             <div class="about-content">
                 <div class="about-text">
-                    <p>QuanFin Capital is a proprietary trading firm committed to building cutting-edge strategies and leveraging quantitative research. Our team thrives at the intersection of finance and technology.</p>
-                    <p>We design, test, and deploy trading models that adapt to dynamic markets. Our approach integrates statistics, machine learning, and risk management to deliver consistent performance.</p>
-                    <p>Through rigorous research, real-time monitoring, and automation, QuanFin Capital delivers a competitive edge in trading. We combine strategy with execution to empower traders.</p>
+                    <p>QuanFin Capital is a proprietary trading firm committed to building cutting-edge strategies and
+                        leveraging quantitative research. Our team thrives at the intersection of finance and
+                        technology.</p>
+                    <p>We design, test, and deploy trading models that adapt to dynamic markets. Our approach integrates
+                        statistics, machine learning, and risk management to deliver consistent performance.</p>
+                    <p>Through rigorous research, real-time monitoring, and automation, QuanFin Capital delivers a
+                        competitive edge in trading. We combine strategy with execution to empower traders.</p>
                 </div>
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <div class="stat-number" data-target="10">0</div>
+                        <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                        <div class="stat-number" data-target="15">0</div>
                         <div class="stat-label">Years Experience</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number" data-target="500">0</div>
-                        <div class="stat-label">Assets Under Management (M+)</div>
+                        <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
+                        <div class="stat-number" data-target="750">0</div>
+                        <div class="stat-label">Million AUM</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number" data-target="99.9">0</div>
+                        <div class="stat-icon"><i class="fas fa-server"></i></div>
+                        <div class="stat-number" data-target="99.97">0</div>
                         <div class="stat-label">System Uptime (%)</div>
                     </div>
                     <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-eye"></i></div>
                         <div class="stat-number">24/7</div>
                         <div class="stat-label">Market Monitoring</div>
                     </div>
@@ -103,27 +286,52 @@
             </div>
             <div class="services-grid">
                 <div class="service-card">
-                    <div class="service-icon">🤖</div>
+                    <div class="service-icon" style="color: #4F46E5;"><i class="fas fa-robot"></i></div>
                     <h3>AI-Driven Trading Models</h3>
-                    <p>Advanced algorithms powered by machine learning and artificial intelligence</p>
+                    <p>Advanced algorithms powered by machine learning and artificial intelligence for optimal trading
+                        decisions</p>
+                    <ul class="service-features">
+                        <li>Deep Learning</li>
+                        <li>Neural Networks</li>
+                        <li>Pattern Recognition</li>
+                        <li>Predictive Analytics</li>
+                    </ul>
                     <button class="btn btn--outline" onclick="openModal('ai-models')">Learn More</button>
                 </div>
                 <div class="service-card">
-                    <div class="service-icon">🛡️</div>
+                    <div class="service-icon" style="color: #059669;"><i class="fas fa-shield-alt"></i></div>
                     <h3>Risk Management Systems</h3>
-                    <p>Comprehensive risk assessment and management frameworks</p>
+                    <p>Comprehensive risk assessment and management frameworks with real-time monitoring</p>
+                    <ul class="service-features">
+                        <li>VaR Modeling</li>
+                        <li>Stress Testing</li>
+                        <li>Portfolio Optimization</li>
+                        <li>Real-time Alerts</li>
+                    </ul>
                     <button class="btn btn--outline" onclick="openModal('risk-management')">Learn More</button>
                 </div>
                 <div class="service-card">
-                    <div class="service-icon">📊</div>
+                    <div class="service-icon" style="color: #DC2626;"><i class="fas fa-chart-line"></i></div>
                     <h3>Real-Time Analytics</h3>
-                    <p>Live market monitoring and data analysis capabilities</p>
+                    <p>Live market monitoring and data analysis capabilities with millisecond precision</p>
+                    <ul class="service-features">
+                        <li>Market Data Feeds</li>
+                        <li>Technical Analysis</li>
+                        <li>Sentiment Analysis</li>
+                        <li>Performance Tracking</li>
+                    </ul>
                     <button class="btn btn--outline" onclick="openModal('analytics')">Learn More</button>
                 </div>
                 <div class="service-card">
-                    <div class="service-icon">🔬</div>
+                    <div class="service-icon" style="color: #7C3AED;"><i class="fas fa-microscope"></i></div>
                     <h3>Quantitative Research</h3>
-                    <p>Data-driven research and strategy development</p>
+                    <p>Data-driven research and strategy development using advanced statistical methods</p>
+                    <ul class="service-features">
+                        <li>Statistical Modeling</li>
+                        <li>Backtesting</li>
+                        <li>Strategy Development</li>
+                        <li>Market Research</li>
+                    </ul>
                     <button class="btn btn--outline" onclick="openModal('research')">Learn More</button>
                 </div>
             </div>
@@ -139,33 +347,78 @@
             </div>
             <div class="tech-content">
                 <div class="tech-features">
-                    <div class="tech-feature">
-                        <i class="fas fa-brain"></i>
-                        <h4>Machine Learning</h4>
-                        <p>Advanced ML algorithms for pattern recognition and predictive modeling</p>
+                    <div class="tech-feature fade-in-element">
+                        <div class="tech-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="tech-info">
+                            <h4>Machine Learning</h4>
+                            <p>Advanced ML algorithms for pattern recognition and predictive modeling with continuous
+                                learning capabilities.</p>
+                            <div class="tech-metrics">
+                                <span class="metric">99.2% Accuracy</span>
+                                <span class="metric">Real-time Processing</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="tech-feature">
-                        <i class="fas fa-chart-line"></i>
-                        <h4>Real-Time Processing</h4>
-                        <p>Low-latency systems for instant market data processing and execution</p>
+                    <div class="tech-feature fade-in-element">
+                        <div class="tech-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div class="tech-info">
+                            <h4>Low Latency Systems</h4>
+                            <p>Ultra-fast execution with microsecond precision for optimal market entry and exit points.
+                            </p>
+                            <div class="tech-metrics">
+                                <span class="metric">&lt; 50μs Latency</span>
+                                <span class="metric">High Frequency</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="tech-feature">
-                        <i class="fas fa-shield-alt"></i>
-                        <h4>Risk Analytics</h4>
-                        <p>Sophisticated risk modeling and portfolio optimization tools</p>
+                    <div class="tech-feature fade-in-element">
+                        <div class="tech-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="tech-info">
+                            <h4>Risk Analytics</h4>
+                            <p>Sophisticated risk modeling and portfolio optimization with real-time monitoring and
+                                alerts.</p>
+                            <div class="tech-metrics">
+                                <span class="metric">Multi-factor Models</span>
+                                <span class="metric">24/7 Monitoring</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="tech-feature">
-                        <i class="fas fa-database"></i>
-                        <h4>Big Data</h4>
-                        <p>Massive data processing capabilities for comprehensive market analysis</p>
+                    <div class="tech-feature fade-in-element">
+                        <div class="tech-icon">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <div class="tech-info">
+                            <h4>Big Data Infrastructure</h4>
+                            <p>Massive parallel processing capabilities for comprehensive market analysis and
+                                backtesting.</p>
+                            <div class="tech-metrics">
+                                <span class="metric">Petabyte Scale</span>
+                                <span class="metric">Cloud Native</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="tech-visual">
                     <div class="tech-circle">
-                        <div class="tech-orbit orbit-1"></div>
-                        <div class="tech-orbit orbit-2"></div>
-                        <div class="tech-orbit orbit-3"></div>
-                        <div class="tech-center">AI</div>
+                        <div class="tech-orbit orbit-1">
+                            <div class="orbit-node">Algo</div>
+                        </div>
+                        <div class="tech-orbit orbit-2">
+                            <div class="orbit-node">ML</div>
+                        </div>
+                        <div class="tech-orbit orbit-3">
+                            <div class="orbit-node">AI</div>
+                        </div>
+                        <div class="tech-center">
+                            <i class="fas fa-microchip"></i>
+                            <div>Core</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -182,27 +435,42 @@
             <div class="team-grid">
                 <div class="team-card">
                     <div class="team-avatar">
-                        <i class="fas fa-user-tie"></i>
+                        <img src="Data/Faizan.jpg" alt="Mohd Faizan" loading="lazy">
                     </div>
-                    <h3>Dr. Sarah Chen</h3>
+                    <h3>Mohd Faizan</h3>
                     <h4>Chief Quantitative Officer</h4>
-                    <p>PhD in Financial Mathematics, 15+ years in algorithmic trading</p>
+                    <p>B.tech in Information Technology from RIMT, 5+ years in algorithmic trading</p>
+                    <div class="team-social">
+                        <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://www.instagram.com/mrfaizaniitians?igsh=MXZpdjJwNzZucXBlaw==" target="_blank"><i
+                                class="fa-brands fa-instagram"></i></a>
+                    </div>
                 </div>
                 <div class="team-card">
                     <div class="team-avatar">
-                        <i class="fas fa-user-cog"></i>
+                        <img src="Data/Arshad.jpg" alt="Arshad" loading="lazy">
                     </div>
-                    <h3>Michael Rodriguez</h3>
+                    <h3>Ali Arshad</h3>
                     <h4>Head of Technology</h4>
-                    <p>Former Google engineer, expert in machine learning systems</p>
+                    <p>AI/ML Engineer in DreamScape , expert in distributed systems</p>
+                    <div class="team-social">
+                        <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://www.instagram.com/ali_arshad0110?utm_source=qr&igsh=MTE2dGRnMXAyMmF4bw=="
+                            target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                    </div>
                 </div>
                 <div class="team-card">
                     <div class="team-avatar">
-                        <i class="fas fa-user-shield"></i>
+                        <img src="Data/Arafat.jpg" alt="Arafat" loading="lazy">
                     </div>
-                    <h3>Emma Thompson</h3>
+                    <h3>mohd Arafat</h3>
                     <h4>Risk Management Director</h4>
-                    <p>CFA, former JPMorgan risk analyst with 12 years experience</p>
+                    <p>CFA, former JPMorgan VP with 12 years in derivatives</p>
+                    <div class="team-social">
+                        <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://www.instagram.com/arafaat__husain?igsh=bmp2aTFrNnRiamc3" target="_blank"><i
+                                class="fa-brands fa-instagram"></i></a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -230,22 +498,29 @@
                         <i class="fas fa-map-marker-alt"></i>
                         <span>New York, NY 10001</span>
                     </div>
+                    <div class="contact-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Mon - Fri: 9:00 AM - 6:00 PM EST</span>
+                    </div>
                 </div>
-                <form class="contact-form" id="contact-form">
+                <form class="contact-form glassmorphism" id="contact-form">
                     <div class="form-group">
                         <input type="text" id="name" name="name" class="form-control" placeholder="Your Name" required>
                         <span class="form-error" id="name-error"></span>
                     </div>
                     <div class="form-group">
-                        <input type="email" id="email" name="email" class="form-control" placeholder="Your Email" required>
+                        <input type="email" id="email" name="email" class="form-control" placeholder="Your Email"
+                            required>
                         <span class="form-error" id="email-error"></span>
                     </div>
                     <div class="form-group">
-                        <input type="text" id="subject" name="subject" class="form-control" placeholder="Subject" required>
+                        <input type="text" id="subject" name="subject" class="form-control" placeholder="Subject"
+                            required>
                         <span class="form-error" id="subject-error"></span>
                     </div>
                     <div class="form-group">
-                        <textarea id="message" name="message" class="form-control" rows="5" placeholder="Your Message" required></textarea>
+                        <textarea id="message" name="message" class="form-control" rows="5" placeholder="Your Message"
+                            required></textarea>
                         <span class="form-error" id="message-error"></span>
                     </div>
                     <button type="submit" class="btn btn--primary btn--full-width">Send Message</button>
@@ -260,11 +535,12 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <h3>QuanFin Capital</h3>
-                    <p>Empowering traders with precision and efficiency through advanced technology and quantitative research.</p>
+                    <p>Empowering traders with precision and efficiency through advanced technology and quantitative
+                        research.</p>
                     <div class="social-links">
-                        <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
-                        <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
-                        <a href="#" target="_blank"><i class="fab fa-github"></i></a>
+                        <a href="www.linkedin.com/in/ali-arshad-1a2253296" target="_blank"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://www.instagram.com/ali_arshad0110?utm_source=qr&igsh=MTE2dGRnMXAyMmF4bw==" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="https://github.com/Ali-Arshad-110" target="_blank"><i class="fab fa-github"></i></a>
                     </div>
                 </div>
                 <div class="footer-section">
@@ -282,7 +558,7 @@
                         <li><a href="#about">About Us</a></li>
                         <li><a href="#team">Our Team</a></li>
                         <li><a href="#contact">Contact</a></li>
-                        <li><a href="#">Careers</a></li>
+                        <li><a href="#dashboard">Dashboard</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
@@ -303,23 +579,48 @@
         <i class="fas fa-chevron-up"></i>
     </button>
 
+    <!-- Live Chat Widget -->
+    <div class="chat-widget" id="chat-widget">
+        <div class="chat-bubble" id="chat-bubble">
+            <i class="fas fa-comments"></i>
+        </div>
+        <div class="chat-window hidden" id="chat-window">
+            <div class="chat-header">
+                <h4>Support Chat</h4>
+                <button class="chat-close" id="chat-close">×</button>
+            </div>
+            <div class="chat-messages" id="chat-messages">
+                <div class="chat-message bot">
+                    <p>Hello! How can I help you today?</p>
+                </div>
+            </div>
+            <div class="chat-input-container">
+                <input type="text" class="chat-input" id="chat-input" placeholder="Type your message...">
+                <button class="chat-send" id="chat-send"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
     <!-- Modals -->
     <div class="modal hidden" id="learn-more">
-        <div class="modal-content">
+        <div class="modal-content glassmorphism">
             <span class="modal-close">&times;</span>
             <h2>About QuanFin Capital</h2>
-            <p>We believe in transparency and accessibility. Whether you're a budding trader or an experienced professional, reach out to us to explore opportunities in quant trading.</p>
-            <p>Our mission is to deliver consistent performance through the integration of statistics, machine learning, and risk management in dynamic market conditions.</p>
+            <p>We believe in transparency and accessibility. Whether you're a budding trader or an experienced
+                professional, reach out to us to explore opportunities in quant trading.</p>
+            <p>Our mission is to deliver consistent performance through the integration of statistics, machine learning,
+                and risk management in dynamic market conditions.</p>
         </div>
     </div>
 
     <div class="modal hidden" id="ai-models">
-        <div class="modal-content">
+        <div class="modal-content glassmorphism">
             <span class="modal-close">&times;</span>
             <h2>AI-Driven Trading Models</h2>
-            <p>Our proprietary AI models leverage deep learning and neural networks to identify market patterns and execute trades with unprecedented accuracy.</p>
+            <p>Our proprietary AI models leverage deep learning and neural networks to identify market patterns and
+                execute trades with unprecedented accuracy.</p>
             <ul>
-                <li>Machine learning algorithms for pattern recognition</li>
+                <li>Deep learning algorithms for pattern recognition</li>
                 <li>Neural networks for predictive modeling</li>
                 <li>Natural language processing for news sentiment analysis</li>
                 <li>Reinforcement learning for adaptive strategies</li>
@@ -328,10 +629,11 @@
     </div>
 
     <div class="modal hidden" id="risk-management">
-        <div class="modal-content">
+        <div class="modal-content glassmorphism">
             <span class="modal-close">&times;</span>
             <h2>Risk Management Systems</h2>
-            <p>Comprehensive risk assessment frameworks that protect capital while maximizing returns through sophisticated modeling techniques.</p>
+            <p>Comprehensive risk assessment frameworks that protect capital while maximizing returns through
+                sophisticated modeling techniques.</p>
             <ul>
                 <li>Value at Risk (VaR) calculations</li>
                 <li>Portfolio optimization algorithms</li>
@@ -342,10 +644,11 @@
     </div>
 
     <div class="modal hidden" id="analytics">
-        <div class="modal-content">
+        <div class="modal-content glassmorphism">
             <span class="modal-close">&times;</span>
             <h2>Real-Time Analytics</h2>
-            <p>Advanced analytics platform providing instant insights into market conditions and trading performance.</p>
+            <p>Advanced analytics platform providing instant insights into market conditions and trading performance.
+            </p>
             <ul>
                 <li>Live market data processing</li>
                 <li>Performance attribution analysis</li>
@@ -356,10 +659,11 @@
     </div>
 
     <div class="modal hidden" id="research">
-        <div class="modal-content">
+        <div class="modal-content glassmorphism">
             <span class="modal-close">&times;</span>
             <h2>Quantitative Research</h2>
-            <p>Data-driven research methodologies that form the foundation of our trading strategies and risk management approaches.</p>
+            <p>Data-driven research methodologies that form the foundation of our trading strategies and risk management
+                approaches.</p>
             <ul>
                 <li>Statistical analysis and modeling</li>
                 <li>Backtesting and validation</li>
@@ -369,6 +673,7 @@
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <script src="script.js"></script>
 </body>
+
 </html>
